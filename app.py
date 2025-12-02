@@ -54,6 +54,7 @@ def criar_perfil():
     
     # Salva perfil no ETCD
     chave_perfil = f"{PERFIS_PREFIX}{perfil_id}"
+    # Ex.: /perfis/ad8sd-23sad75-2013b : {"_id":"id", "nome":"Ana", ...}
     etcd.put(chave_perfil, perfil)
     
     # Salva habilidades de forma separada (pra pesquisa)
