@@ -1,13 +1,12 @@
-# API REST com Flask e ETCD
+# Sistema de Conexões Profissionais com ETCD
 
-Este projeto demonstra a implementação de uma API REST usando Flask integrada com ETCD, um sistema de armazenamento distribuído de chave-valor. O projeto inclui operações CRUD completas para gerenciamento de usuários, além de exemplos práticos de uso do ETCD para configurações, service discovery e locks distribuídos.
-
----
+[Sistema de recomendação e gerenciamento de perfis profissionais](https://www.canva.com/design/DAGrjBWuMBI/lpUoyC-ISC1G8UhAnFguYw/edit?utm_content=DAGrjBWuMBI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) desenvolvido com Flask e ETCD. A aplicação permite criar perfis com habilidades técnicas, realizar buscas especializadas e recomendar conexões entre profissionais com base em habilidades compatíveis.
 
 ## Índice
 
 - [Sobre o Projeto](#sobre-o-projeto)
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Funcionalidades](#funcionalidades)
 - [Pré-requisitos](#pré-requisitos)
 - [Instalação](#instalação)
 - [Configuração](#configuração)
@@ -15,72 +14,70 @@ Este projeto demonstra a implementação de uma API REST usando Flask integrada 
 - [Endpoints da API](#endpoints-da-api)
 - [Exemplos de Uso](#exemplos-de-uso)
 - [Estrutura do Projeto](#estrutura-do-projeto)
-- [Casos de Uso do ETCD](#casos-de-uso-do-etcd)
+- [Como Funciona o Sistema de Recomendação](#como-funciona-o-sistema-de-recomendação)
+- [Habilidades Válidas](#habilidades-válidas)
 
----
+## Sobre o Projeto
 
-## Funcionalidades
+Este projeto implementa um sistema de networking profissional que utiliza ETCD como banco de dados distribuído. A aplicação oferece:
 
-- CRUD completo de usuários armazenados no ETCD
-- Gerenciamento de configurações da aplicação
-- Service discovery para registro e descoberta de serviços
-- Implementação de locks distribuídos
-- Busca e filtragem de dados
+- CRUD completo de perfis profissionais
+- Sistema de recomendação baseado em habilidades compartilhadas
+- Busca de profissionais por habilidade específica
+- Criação de conexões entre perfis
+- Dashboard com estatísticas do sistema
+- Validação de habilidades técnicas
 
----
 
 ## Tecnologias Utilizadas
 
 - **Python 3.13** - Linguagem de programação
 - **Flask 3.1.2** - Framework web
-- **ETCD 3.5.0** - Sistema de armazenamento distribuído
+- **ETCD 3.5.0** - Sistema de armazenamento distribuído chave-valor
 - **etcd3 0.12.0** - Cliente Python para ETCD
-- **python-dotenv** - Gerenciamento de variáveis de ambiente
+- **python-dotenv 1.2.1** - Gerenciamento de variáveis de ambiente
 
----
+## Funcionalidades
 
-## Estrutura do Projeto
+### Gerenciamento de Perfis
+- Criar, listar, atualizar e deletar perfis profissionais
+- Informações incluem: nome, cargo, empresa, localização e resumo
+- Associação de habilidades técnicas validadas
 
-```
-.
-├── app.py              # Aplicação principal com todos os endpoints
-├── etcd_config.py      # Cliente ETCD com operações básicas
-├── requirements.txt    # Dependências do projeto
-├── .env               # Variáveis de ambiente
-├── .gitignore         # Arquivos ignorados pelo Git
-└── README.md          # Documentação do projeto
-```
+### Sistema de Recomendação
+- Recomendação automática de conexões baseada em habilidades compatíveis
+- Cálculo de compatibilidade entre perfis
+- Ranking de sugestões por número de habilidades em comum
+- Exibição de habilidades compartilhadas e exclusivas
 
-### Arquivo Principal (app.py)
+### Busca e Filtros
+- Busca de profissionais por habilidade específica
+- Listagem de todos os perfis cadastrados
+- Consulta de perfis individuais com suas habilidades
 
-Contém todos os endpoints da API organizados em seções:
-- CRUD completo de usuários
-- Gerenciamento de configurações
-- Service discovery
-- Locks distribuídos
+### Dashboard
+- Estatísticas em tempo real do sistema
+- Total de perfis cadastrados
+- Total de conexões criadas
+- Ranking das habilidades mais populares
 
-### Cliente ETCD (etcd_config.py)
-
-Classe `EtcdClient` com métodos para:
-- `put(key, value)` - Armazena um valor
-- `get(key)` - Recupera um valor
-- `get_all_with_prefix(prefix)` - Busca todas as chaves com prefixo
-- `delete(key)` - Remove uma chave
-- `delete_prefix(prefix)` - Remove todas as chaves com prefixo
-
----
+### Gestão de Conexões
+- Criação de conexões entre perfis
+- Status de conexões (pendente, aceita, recusada)
+- Validação de perfis antes de conectar
 
 ## Pré-requisitos
 
+Antes de começar, você precisará ter instalado:
+
 - Python 3.7 ou superior
-- Container Docker ETCD 3.5.0
-- pip
+- Docker (para executar o container ETCD)
+- pip (gerenciador de pacotes Python)
 
----
+### Instalando o ETCD via Docker
 
-### Instalação do ETCD
+Execute o comando abaixo para iniciar um container ETCD 3.5.0:
 
-**Docker:**
 ```bash
 docker run -d \
   -p 2379:2379 \
@@ -99,9 +96,12 @@ docker run -d \
   --initial-cluster-state new
 ```
 
----
+Para verificar se o ETCD está rodando:
+```bash
+docker ps | grep etcd
+```
 
-## Configurações de Ambiente
+## Instalação
 
 1. Clone o repositório:
 ```bash
@@ -122,22 +122,26 @@ venv\Scripts\activate  # Windows
 pip install -r requirements.txt
 ```
 
-4. Certifique-se de que o container do ETCD está rodando:
+## Configuração
+
+1. Certifique-se de que o container ETCD está rodando:
 ```bash
 docker ps | grep etcd
 ```
 
-5. Renomear o arquivo `.env.example` para `.env` e preencher os valores de acordo com sua configuração:
+2. Copie o arquivo de exemplo de variáveis de ambiente:
+```bash
+cp .env.example .env
 ```
-# Exemplo
+
+3. Configure as variáveis no arquivo `.env`:
+```
 ETCD_HOST=localhost
 ETCD_PORT=2379
 FLASK_PORT=5000
 ```
 
-Você pode modificar as variáveis conforme necessário.
-
----
+Você pode modificar estas variáveis conforme necessário para seu ambiente.
 
 ## Executando o Projeto
 
@@ -148,217 +152,336 @@ python app.py
 
 2. A API estará disponível em `http://localhost:5000`
 
----
-
 ## Endpoints da API
 
-### CRUD de Usuários
+### Informações Gerais
 
-#### Criar Usuário
+#### Página Inicial
 ```http
-POST /usuarios
+GET /
+```
+Retorna informações sobre a API e lista de todos os endpoints disponíveis.
+
+### CRUD de Perfis
+
+#### Criar Perfil
+```http
+POST /perfis
 Content-Type: application/json
 
 {
-  "nome": "João Silva",
-  "email": "joao@email.com",
-  "idade": 30
+  "nome": "Maria Silva",
+  "cargo": "Desenvolvedora Backend",
+  "empresa": "Tech Solutions",
+  "localizacao": "São Paulo, SP",
+  "resumo": "Desenvolvedora com 5 anos de experiência",
+  "habilidades": ["python", "docker", "sql", "aws"]
 }
 ```
 
-#### Listar Todos os Usuários
+#### Listar Todos os Perfis
 ```http
-GET /usuarios
+GET /perfis
 ```
 
-#### Buscar Usuário Específico
+#### Buscar Perfil Específico
 ```http
-GET /usuarios/{usuario_id}
+GET /perfis/{perfil_id}
 ```
+Retorna o perfil e suas habilidades associadas.
 
-#### Atualizar Usuário
+#### Atualizar Perfil
 ```http
-PUT /usuarios/{usuario_id}
+PUT /perfis/{perfil_id}
 Content-Type: application/json
 
 {
-  "nome": "João Silva Santos",
-  "email": "joao.santos@email.com",
-  "idade": 31
+  "nome": "Maria Silva Santos",
+  "cargo": "Senior Backend Developer",
+  "empresa": "Tech Solutions",
+  "localizacao": "São Paulo, SP",
+  "resumo": "Desenvolvedora Senior com 6 anos de experiência"
 }
 ```
 
-#### Deletar Usuário
+#### Deletar Perfil
 ```http
-DELETE /usuarios/{usuario_id}
+DELETE /perfis/{perfil_id}
 ```
+Remove o perfil e suas habilidades associadas.
 
-#### Buscar por Nome
+### Sistema de Recomendações
+
+#### Obter Recomendações de Conexões
 ```http
-GET /usuarios/buscar?nome=João
+GET /perfis/{perfil_id}/recomendacoes
 ```
+Retorna os 5 perfis mais compatíveis baseado em habilidades compartilhadas.
 
----
+**Resposta inclui:**
+- Dados do perfil recomendado
+- Total de habilidades em comum
+- Lista de habilidades compartilhadas
+- Habilidades que o outro perfil possui e você não
+- Percentual de compatibilidade
 
-### Gerenciamento de Configurações
+### Busca e Filtros
 
-#### Obter Configuração
+#### Buscar por Habilidade
 ```http
-GET /config/{config_key}
+GET /buscar/habilidade/{nome_habilidade}
 ```
+Retorna todos os perfis que possuem a habilidade especificada.
 
-#### Definir Configuração
+Exemplo: `GET /buscar/habilidade/python`
+
+### Gestão de Conexões
+
+#### Criar Conexão
 ```http
-PUT /config/{config_key}
+POST /conexoes
 Content-Type: application/json
 
 {
-  "valor": "valor_da_configuracao"
+  "perfil_id_1": "uuid-do-perfil-1",
+  "perfil_id_2": "uuid-do-perfil-2"
 }
 ```
+Cria uma conexão pendente entre dois perfis.
 
----
+### Dashboard
 
-### Service Discovery
-
-#### Registrar Serviço
+#### Estatísticas do Sistema
 ```http
-POST /servicos/registrar
-Content-Type: application/json
-
-{
-  "nome": "api-pagamentos",
-  "endpoint": "http://localhost:8080"
-}
+GET /dashboard
 ```
-
-#### Listar Serviços
-```http
-GET /servicos/{nome_servico}
-```
-
----
-
-### Locks Distribuídos
-
-#### Adquirir Lock
-```http
-POST /lock/{recurso}
-Content-Type: application/json
-
-{
-  "holder": "servico-1"
-}
-```
-
-#### Liberar Lock
-```http
-DELETE /lock/{recurso}
-```
-
----
+Retorna estatísticas gerais incluindo:
+- Total de perfis cadastrados
+- Total de conexões criadas
+- Top 5 habilidades mais populares
 
 ## Exemplos de Uso
 
-### Criar um Usuário
+### 1. Criar um Perfil Profissional
 
 ```bash
-curl -X POST http://localhost:5000/usuarios \
+curl -X POST http://localhost:5000/perfis \
   -H "Content-Type: application/json" \
   -d '{
-    "nome": "Maria Santos",
-    "email": "maria@email.com",
-    "idade": 28,
-    "cidade": "São Paulo"
+    "nome": "Ana Costa",
+    "cargo": "Desenvolvedora Full Stack",
+    "empresa": "StartupXYZ",
+    "localizacao": "Rio de Janeiro, RJ",
+    "resumo": "Apaixonada por tecnologia e inovação",
+    "habilidades": ["javascript", "python", "react", "nodejs", "docker"]
   }'
 ```
 
-### Listar Todos os Usuários
-
-```bash
-curl http://localhost:5000/usuarios
+**Resposta:**
+```json
+{
+  "mensagem": "Perfil criado com sucesso",
+  "id": "a1b2c3d4-5678-90ab-cdef-1234567890ab",
+  "perfil": {
+    "_id": "a1b2c3d4-5678-90ab-cdef-1234567890ab",
+    "nome": "Ana Costa",
+    "cargo": "Desenvolvedora Full Stack",
+    "empresa": "StartupXYZ",
+    "localizacao": "Rio de Janeiro, RJ",
+    "resumo": "Apaixonada por tecnologia e inovação",
+    "criado_em": "2025-12-02T10:30:00"
+  },
+  "habilidades": ["javascript", "python", "react", "nodejs", "docker"]
+}
 ```
 
-### Buscar Usuário por Nome
+### 2. Listar Todos os Perfis
 
 ```bash
-curl "http://localhost:5000/usuarios/buscar?nome=Maria"
+curl http://localhost:5000/perfis
 ```
 
-### Definir uma Configuração
+### 3. Obter Recomendações de Conexões
 
 ```bash
-curl -X PUT http://localhost:5000/config/max_connections \
-  -H "Content-Type: application/json" \
-  -d '{"valor": "100"}'
+curl http://localhost:5000/perfis/a1b2c3d4-5678-90ab-cdef-1234567890ab/recomendacoes
 ```
 
-### Registrar um Serviço
+**Resposta:**
+```json
+{
+  "perfil_id": "a1b2c3d4-5678-90ab-cdef-1234567890ab",
+  "total_recomendacoes": 3,
+  "minhas_habilidades": ["javascript", "python", "react", "nodejs", "docker"],
+  "recomendacoes": [
+    {
+      "perfil_id": "xyz123...",
+      "nome": "Carlos Santos",
+      "cargo": "DevOps Engineer",
+      "empresa": "CloudTech",
+      "total_habilidades_comuns": 3,
+      "habilidades_comuns": ["python", "docker", "nodejs"],
+      "habilidades_que_ele_tem": ["kubernetes", "aws", "ci-cd"],
+      "compatibilidade": "60%"
+    }
+  ]
+}
+```
+
+### 4. Buscar Profissionais por Habilidade
 
 ```bash
-curl -X POST http://localhost:5000/servicos/registrar \
+curl http://localhost:5000/buscar/habilidade/python
+```
+
+### 5. Criar uma Conexão
+
+```bash
+curl -X POST http://localhost:5000/conexoes \
   -H "Content-Type: application/json" \
   -d '{
-    "nome": "api-usuarios",
-    "endpoint": "http://localhost:5001"
+    "perfil_id_1": "a1b2c3d4-5678-90ab-cdef-1234567890ab",
+    "perfil_id_2": "xyz123-4567-89ab-cdef-0987654321zy"
   }'
 ```
 
-### Adquirir um Lock
+### 6. Atualizar um Perfil
 
 ```bash
-curl -X POST http://localhost:5000/lock/recurso-critico \
+curl -X PUT http://localhost:5000/perfis/a1b2c3d4-5678-90ab-cdef-1234567890ab \
   -H "Content-Type: application/json" \
-  -d '{"holder": "worker-1"}'
+  -d '{
+    "nome": "Ana Costa Silva",
+    "cargo": "Senior Full Stack Developer",
+    "empresa": "StartupXYZ",
+    "localizacao": "Rio de Janeiro, RJ",
+    "resumo": "Tech Lead com foco em arquitetura de sistemas"
+  }'
 ```
 
----
+### 7. Ver Estatísticas do Sistema
 
-## Casos de Uso do ETCD
+```bash
+curl http://localhost:5000/dashboard
+```
 
-### 1. Armazenamento de Dados
+**Resposta:**
+```json
+{
+  "estatisticas": {
+    "total_perfis": 15,
+    "total_conexoes": 8,
+    "habilidades_mais_populares": {
+      "python": 12,
+      "javascript": 10,
+      "docker": 8,
+      "react": 7,
+      "sql": 6
+    },
+    "ultima_atualizacao": "2025-12-02T14:25:30"
+  }
+}
+```
 
-O ETCD é usado como banco de dados chave-valor para armazenar informações de usuários. Cada usuário é armazenado com uma chave única no formato `/users/{id}`.
+## Estrutura do Projeto
 
-### 2. Configurações Centralizadas
+```
+.
+├── app.py              # Aplicação Flask com todos os endpoints
+├── etcd_config.py      # Cliente ETCD com operações básicas
+├── requirements.txt    # Dependências do projeto
+├── .env               # Variáveis de ambiente (não versionado)
+├── .env.example       # Exemplo de configuração
+├── .gitignore         # Arquivos ignorados pelo Git
+└── README.md          # Documentação do projeto
+```
 
-Permite armazenar configurações da aplicação que podem ser acessadas e modificadas dinamicamente sem reiniciar o serviço.
+### Arquivo Principal (app.py)
 
-### 3. Service Discovery
+Contém todos os endpoints da API organizados em seções:
 
-Implementa um sistema de registro de serviços onde aplicações podem registrar seus endpoints e outros serviços podem descobrir estas instâncias.
+**Prefixos de Organização no ETCD:**
+- `/perfis/*` - Dados dos perfis profissionais
+- `/habilidades/*` - Habilidades associadas aos perfis
+- `/conexoes/*` - Conexões entre perfis
 
-### 4. Locks Distribuídos
+**Funcionalidades:**
+- CRUD completo de perfis profissionais
+- Sistema de recomendação baseado em habilidades
+- Busca por habilidade específica
+- Criação de conexões entre perfis
+- Dashboard com estatísticas
 
-Demonstra como usar o ETCD para implementar locks distribuídos, permitindo que múltiplas instâncias de uma aplicação coordenem o acesso a recursos compartilhados.
+### Cliente ETCD (etcd_config.py)
 
-### 5. Prefixos Hierárquicos
+Classe `EtcdClient` com métodos para interagir com o ETCD:
+- `put(key, value)` - Armazena um valor (converte dict para JSON automaticamente)
+- `get(key)` - Recupera um valor (converte JSON de volta para dict)
+- `get_all_with_prefix(prefix)` - Busca todas as chaves com prefixo específico
+- `delete(key)` - Remove uma chave
+- `delete_prefix(prefix)` - Remove todas as chaves com prefixo
 
-Utiliza prefixos para organizar dados de forma hierárquica:
-- `/users/*` - Dados de usuários
-- `/config/app/*` - Configurações da aplicação
-- `/services/*` - Serviços registrados
-- `/locks/*` - Locks distribuídos
+## Como Funciona o Sistema de Recomendação
 
----
+O sistema de recomendação analisa as habilidades de cada perfil para sugerir conexões relevantes:
 
-## Vantagens do ETCD
+1. **Coleta de Habilidades**: Ao criar um perfil, as habilidades são validadas contra uma lista predefinida e armazenadas separadamente no ETCD.
 
-- **Consistência forte**: Garante leitura consistente após escrita
-- **Distribuído**: Tolera falhas em alguns nós
-- **Observável**: Suporta watching de chaves para notificações em tempo real
-- **Seguro**: Suporta autenticação e TLS
-- **Simples**: API REST e gRPC fáceis de usar
+2. **Cálculo de Compatibilidade**: 
+   - Busca todas as habilidades do perfil solicitante
+   - Compara com habilidades de todos os outros perfis
+   - Calcula interseção de habilidades (habilidades em comum)
+   - Identifica habilidades exclusivas de cada perfil
 
-## Limitações e Considerações
+3. **Ranking**: 
+   - Ordena perfis por número de habilidades compartilhadas
+   - Calcula percentual de compatibilidade
+   - Retorna top 5 recomendações
 
-- O ETCD não é otimizado para grandes volumes de dados
-- Não possui recursos avançados de busca como bancos relacionais
-- Buscas por conteúdo requerem filtragem local
-- Ideal para metadados, configurações e coordenação distribuída
+4. **Resultado**: Para cada recomendação, retorna:
+   - Dados do perfil recomendado
+   - Número de habilidades em comum
+   - Lista de habilidades compartilhadas
+   - Habilidades que o outro perfil possui (oportunidade de aprendizado)
+   - Percentual de compatibilidade
 
-## Materiais
+## Habilidades Válidas
 
-- [Documentação - ETCD](https://etcd.io/docs/)
-- [Documentação - Flask](https://flask.palletsprojects.com/)
-- [Documentação - python-etcd3](https://python-etcd3.readthedocs.io/)
+O sistema aceita as seguintes habilidades técnicas:
+
+**Linguagens de Programação:**
+- python
+- java
+- javascript
+- typescript
+
+**Bancos de Dados:**
+- sql
+- nosql
+
+**DevOps e Cloud:**
+- docker
+- kubernetes
+- aws
+- ci-cd
+- devops
+
+**Frontend e Backend:**
+- react
+- nodejs
+- frontend
+- backend
+- fullstack
+
+**Mobile:**
+- mobile
+
+**Dados e IA:**
+- machine-learning
+- data-science
+
+**Ferramentas:**
+- git
+
+Para adicionar novas habilidades, edite a lista `HABILIDADES_VALIDAS` em `app.py`.
+
