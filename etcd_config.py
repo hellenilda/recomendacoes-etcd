@@ -7,31 +7,31 @@ load_dotenv()
 
 class EtcdClient:
     def __init__(self):
-        # ETCD normalmente roda na porta 2379
+        # Host e Porta do .env
         self.host = os.getenv("ETCD_HOST", "localhost")
         self.port = int(os.getenv("ETCD_PORT", 2379))
         self.client = etcd3.client(host=self.host, port=self.port)
     
     def put(self, key, value):
-        """Armazena um valor (string) em uma chave"""
+        # Armazena uma string (value) em uma chave
         if isinstance(value, dict):
-            value = json.dumps(value)  # Converte dict para JSON string
+            value = json.dumps(value)  # conversão dict -> JSON string
         return self.client.put(key, str(value))
     
     def get(self, key):
-        """Obtém o valor de uma chave"""
+        # Pega o valor da chave
         value, metadata = self.client.get(key)
         if value:
             try:
-                # Tenta converter JSON string de volta para dict
+                # Tenta converter JSON string -> dict dnv
                 return json.loads(value.decode('utf-8'))
             except json.JSONDecodeError:
-                # Se não for JSON, retorna como string
+                # Se não for JSON, retorna string
                 return value.decode('utf-8')
         return None
     
     def get_all_with_prefix(self, prefix):
-        """Obtém todas as chaves com um prefixo específico"""
+        # Pega todas as chaves com prefixo específico
         result = {}
         for value, metadata in self.client.get_prefix(prefix):
             key = metadata.key.decode('utf-8')
@@ -42,9 +42,9 @@ class EtcdClient:
         return result
     
     def delete(self, key):
-        """Remove uma chave"""
+        # Remove chave
         return self.client.delete(key)
     
     def delete_prefix(self, prefix):
-        """Remove todas as chaves com prefixo"""
+        # Remove todas as chaves com prefixo
         return self.client.delete_prefix(prefix)
